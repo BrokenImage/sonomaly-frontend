@@ -8,10 +8,12 @@ export default class MultipleImageUploadComponent extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            file: [null]
+            file: [null],
+            prediction: null
         }
         this.uploadMultipleFiles = this.uploadMultipleFiles.bind(this)
-        this.uploadFiles = this.uploadFiles.bind(this)
+        // this.uploadFiles = this.uploadFiles.bind(this)
+        this.getPrediction = this.getPrediction.bind(this)
     }
 
     uploadMultipleFiles(e) {
@@ -22,9 +24,30 @@ export default class MultipleImageUploadComponent extends Component {
         this.setState({ file: this.fileArray })
     }
 
-    uploadFiles(e) {
+    // uploadFiles(e) {
+    getPrediction(e) {
         e.preventDefault()
-        console.log(this.state.file)
+        const file = this.state.file[0]
+        // const upload = (file) => {
+
+        // }
+        // // console.log(this.state.file)
+        // const myHeaders = new Headers({
+        //   "Content-Type": "multipart/form-data",
+        // });
+        fetch("https://prediction.dev.raptorapps.com/api/multi", {
+            method: "POST",
+            body: file,
+            mode: "cors",
+            headers: new Headers({
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+            }),
+        })
+        .then((res) => {
+            console.log(res);
+            this.setState({ prediction: res.prediction[0] });
+        });
     }
 
     render() {
@@ -39,7 +62,9 @@ export default class MultipleImageUploadComponent extends Component {
                 <div className="form-group">
                     <input type="file" className="form-control" onChange={this.uploadMultipleFiles} multiple />
                 </div>
-                <button type="button" className="btn btn-success btn-block" onClick={this.uploadFiles}>Upload</button>
+                <button type="button" className="btn btn-success btn-block" onClick={this.getPrediction}>Submit</button>
+                <br/>
+                <h1>Prediction: {this.state.prediction}</h1>
             </form >
         )
     }

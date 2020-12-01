@@ -26,7 +26,7 @@ class Appa extends Component {
             </div>
           </div>
         </div>
-        <div className='container'>
+        {/* <div className='container'>
           <div className='row'>
               <div className="col-md-6">
                 <div className="card">
@@ -36,7 +36,7 @@ class Appa extends Component {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
     );
   }
