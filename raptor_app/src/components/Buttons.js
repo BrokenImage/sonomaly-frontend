@@ -6,9 +6,9 @@ function Buttons() {
         
         <div>
             <h1> Select Type:</h1>
-            <button type="button" class="btn btn-primary">Binary</button>
+            <button type="button" className="btn btn-primary">Binary</button>
             &nbsp;
-            <button type="button" class="btn btn-secondary">Multi</button>
+            <button type="button" className="btn btn-secondary">Multi</button>
         </div>
 
 
