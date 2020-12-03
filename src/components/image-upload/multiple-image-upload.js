@@ -1,71 +1,88 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 export default class MultipleImageUploadComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      files: [],
+      fileUrlArray: [],
+      isLoading: false,
+      predictions: []
+    };
+    this.saveSelectedFiles = this.saveSelectedFiles.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
+  }
 
-    fileObj = [];
-    fileArray = [];
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            file: [null],
-            prediction: null
-        }
-        this.uploadMultipleFiles = this.uploadMultipleFiles.bind(this)
-        // this.uploadFiles = this.uploadFiles.bind(this)
-        this.getPrediction = this.getPrediction.bind(this)
+  saveSelectedFiles(e) {
+    const newFileUrls = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      newFileUrls.push(URL.createObjectURL(e.target.files[i]));
     }
-
-    uploadMultipleFiles(e) {
-        this.fileObj.push(e.target.files)
-        for (let i = 0; i < this.fileObj[0].length; i++) {
-            this.fileArray.push(URL.createObjectURL(this.fileObj[0][i]))
-        }
-        this.setState({ file: this.fileArray })
+    const newFiles = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      newFiles.push(e.target.files[i]);
     }
+    this.setState({ fileUrlArray: newFileUrls });
+    this.setState({ files: newFiles });
+  }
 
-    // uploadFiles(e) {
-    getPrediction(e) {
-        e.preventDefault()
-        const file = this.state.file[0]
-        // const upload = (file) => {
+  handleImageUpload(e) {
+    e.preventDefault();
 
-        // }
-        // // console.log(this.state.file)
-        // const myHeaders = new Headers({
-        //   "Content-Type": "multipart/form-data",
-        // });
-        fetch("https://prediction.dev.raptorapps.com/api/multi", {
-            method: "POST",
-            body: file,
-            mode: "cors",
-            headers: new Headers({
-                "Content-Type": "multipart/form-data",
-                "Accept": "application/json",
-            }),
-        })
-        .then((res) => {
-            console.log(res);
-            this.setState({ prediction: res.prediction[0] });
-        });
-    }
+    const data = new FormData();
+    this.state.files.forEach((imageFile) => {
+      data.append("files", imageFile);
+    });
 
-    render() {
-        return (
-            <form>
-                <div className="form-group multi-preview">
-                    {(this.fileArray || []).map(url => (
-                        <img src={url} alt="..." />
-                    ))}
-                </div>
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    fetch(`${proxyurl + process.env.REACT_APP_API_URL}/api/classify`, {
+      method: "POST",
+      body: data,
+    })
+      .then((res) => {
+        this.setState({ isLoading: false });
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data); // The api prediction response is found here
+        this.setState({ predictions: data })
+      })
+      .catch((error) => {
+        this.setState({ isLoading: false });
+        console.log("Error", error);
+      });
+  }
 
-                <div className="form-group">
-                    <input type="file" className="form-control" onChange={this.uploadMultipleFiles} multiple />
-                </div>
-                <button type="button" className="btn btn-success btn-block" onClick={this.getPrediction}>Submit</button>
-                <br/>
-                <h1>Prediction: {this.state.prediction}</h1>
-            </form >
-        )
-    }
+  render() {
+    return (
+      <form onSubmit={this.handleImageUpload}>
+        <div className="form-group multi-preview">
+          {(this.state.fileUrlArray || []).map((url, index) => (
+            <img key={index} src={url} alt="..." />
+          ))}
+        </div>
+
+        <div className="form-group">
+          <input
+            type="file"
+            className="form-control"
+            onChange={this.saveSelectedFiles}
+            multiple
+          />
+        </div>
+        {!this.state.isLoading && (
+          <button type="submit" className="btn btn-success btn-block">
+            Upload
+          </button>
+        )}
+        {this.state.isLoading && (
+          <button disabled={true} className="btn btn-success btn-block">
+            Loading...
+          </button>
+        )}
+        <br />
+        <h1>Prediction: {this.state.predictions.prediction}</h1>
+      </form>
+    );
+  }
 }
