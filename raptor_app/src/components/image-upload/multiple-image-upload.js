@@ -29,10 +29,12 @@ export default class MultipleImageUploadComponent extends Component {
         e.preventDefault();
 
         const data = new FormData();
-        data.append('file', this.state.files[0]);
+        this.state.files.forEach((imageFile) => {
+            data.append('files', imageFile);
+        });
 
         const proxyurl = "https://cors-anywhere.herokuapp.com/";
-        fetch(`${proxyurl + 'https://prediction.dev.raptorapps.com'}/api/multi`, {
+        fetch(`${proxyurl + process.env.REACT_APP_API_URL}/api/classify`, {
             method: "POST",
             body: data,
         }).then(res => {
