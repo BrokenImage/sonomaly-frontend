@@ -1,7 +1,7 @@
 .ImageList {
-    width: calc(100% - 80px);
+    width: calc(100% - 90px);
     margin: auto;
-    padding-top: 10px;
+    padding-top: 120px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;  /* defined grid with 3 columns */
     grid-gap: 40px;

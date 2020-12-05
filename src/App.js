@@ -20,7 +20,7 @@ class App extends Component {
           <Route path='/login' component={Apps} />
           <div>
             <ImageList />
-            <ImageCard />
+            {/* <ImageCard /> */}
           </div>
           <Footer />
         </div>
