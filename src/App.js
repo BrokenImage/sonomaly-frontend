@@ -6,6 +6,8 @@ import Apps from './login/Apps'
 // import { render } from 'react-dom';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import Footer from './components/Footer'
+import ImageList from './components/ImageList'
+import ImageCard from './components/ImageCard'
 
 
 class App extends Component {
@@ -16,7 +18,10 @@ class App extends Component {
           <Landing />
           <Route path='/' exact component={Appa} />
           <Route path='/login' component={Apps} />
-          {/* <Appa /> */}
+          <div>
+            <ImageList />
+            <ImageCard />
+          </div>
           <Footer />
         </div>
       </Router>
