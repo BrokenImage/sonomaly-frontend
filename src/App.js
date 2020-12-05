@@ -8,6 +8,7 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import Footer from './components/Footer'
 import ImageList from './components/ImageList'
 import ImageCard from './components/ImageCard'
+import Results from './components/Results'
 
 
 class App extends Component {
@@ -18,6 +19,7 @@ class App extends Component {
           <Landing />
           <Route path='/' exact component={Appa} />
           <Route path='/login' component={Apps} />
+          <Route path='/results' component={Results} />
           <div>
             <ImageList />
             {/* <ImageCard /> */}
